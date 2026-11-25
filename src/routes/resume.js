@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const pool = require('../db');
 const { analyseCV } = require('../cv');
 const { canonical, categoryOf } = require('../skills');
+const { runMatching } = require('../jobs');
 
 const UPLOAD_DIR = path.join(__dirname, '..', '..', 'uploads');
 const upload = multer({
@@ -72,7 +73,12 @@ module.exports = function resumeRoutes(requireAuth) {
         'UPDATE user_profiles SET target_role=COALESCE(?, target_role), headline=? WHERE user_id=?',
         [role, headline ? headline.slice(0, 180) : null, req.user.id]);
       await conn.commit();
-      res.status(201).json({ message: `CV analysed. ${cv.skills.length} skills found.`, ...(await loadResumeState(req.user.id)) });
+      conn.release();
+      conn = null;
+      // Match straight away so the Search page is ready; a failure here must not lose the upload.
+      let matchRunId = null;
+      try { matchRunId = (await runMatching(req.user.id)).runId; } catch (e) { console.warn('Matching after upload failed:', e.message); }
+      res.status(201).json({ message: `CV analysed. ${cv.skills.length} skills found.`, matchRunId, ...(await loadResumeState(req.user.id)) });
     } catch (e) {
       if (conn) await conn.rollback().catch(() => {});
       if (!e.status) console.error(e);

@@ -158,6 +158,7 @@ app.get("/api/profile", requireAuth, async (req, res) => {
   }
 });
 app.use("/api", require("./src/routes/resume")(requireAuth));
+app.use("/api", require("./src/routes/matches")(requireAuth));
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");
@@ -172,6 +173,9 @@ app.use("/api", (req, res) =>
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "index.html")),
 );
-app.listen(PORT, () =>
-  console.log(`Pivot is running at http://localhost:${PORT}`),
-);
+app.listen(PORT, () => {
+  console.log(`Pivot is running at http://localhost:${PORT}`);
+  require("./src/jobs").seedJobs()
+    .then(() => console.log("Demo jobs ready."))
+    .catch(e => console.error("Could not seed demo jobs (run `npm run db:init`?):", e.message));
+});

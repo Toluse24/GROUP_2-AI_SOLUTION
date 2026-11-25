@@ -97,3 +97,11 @@ CREATE TABLE IF NOT EXISTS tutor_messages (
  PRIMARY KEY(id), KEY idx_tutor_user(user_id, created_at),
  CONSTRAINT fk_tutor_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+ALTER TABLE job_matches ADD COLUMN IF NOT EXISTS run_id CHAR(16) NULL AFTER id;
+ALTER TABLE job_matches ADD COLUMN IF NOT EXISTS potential_percent TINYINT UNSIGNED NULL AFTER match_percent;
+ALTER TABLE job_matches ADD INDEX IF NOT EXISTS idx_matches_run(run_id);
+CREATE TABLE IF NOT EXISTS api_cache (
+ cache_key VARCHAR(255) NOT NULL, fetched_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(cache_key)
+) ENGINE=InnoDB;
