@@ -23,7 +23,7 @@
 
     $('dashStatus').lastChild.textContent = d.hasCV ? 'CV active' : 'No CV yet';
     $('dashStatus').querySelector('.dot').style.background = d.hasCV ? '' : '#c3ccd9';
-    $('dashRole').textContent = d.targetRole || (d.hasCV ? 'Career explorer' : 'Upload your CV to begin');
+    $('dashRole').textContent = d.targetRole || (d.hasCV ? 'Career explorer' : 'New member');
 
     const empty = !d.best;
     $('dashEmpty').classList.toggle('hidden', !empty);

@@ -1,4 +1,8 @@
 require("dotenv").config();
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.startsWith("replace_this")) {
+  console.error("JWT_SECRET is missing. Copy .env.example to .env and set a long random JWT_SECRET (see README).");
+  process.exit(1);
+}
 const express = require("express"),
   path = require("path"),
   helmet = require("helmet"),
@@ -177,6 +181,9 @@ app.get("*", (req, res) =>
 );
 app.listen(PORT, () => {
   console.log(`Pivot is running at http://localhost:${PORT}`);
+  console.log(require("./src/ai").enabled()
+    ? `AI: Grok enabled (model ${process.env.XAI_MODEL}).`
+    : "AI: offline mode (set XAI_API_KEY and XAI_MODEL in .env to enable Grok).");
   require("./src/jobs").seedJobs()
     .then(() => console.log("Demo jobs ready."))
     .catch(e => console.error("Could not seed demo jobs (run `npm run db:init`?):", e.message));

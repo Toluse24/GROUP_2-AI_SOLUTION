@@ -27,7 +27,7 @@
           el.lastChild.textContent = hasCV ? 'CV active' : 'No CV yet';
           if (dot) dot.style.background = hasCV ? '' : '#c3ccd9';
         });
-        const role = state.profile.target_role || (hasCV ? 'Career explorer' : 'Upload your CV to begin');
+        const role = state.profile.target_role || (hasCV ? 'Career explorer' : 'New member');
         document.querySelectorAll('[data-role-label]').forEach(el => { el.textContent = role; });
         return state;
       } catch (_) { return null; }

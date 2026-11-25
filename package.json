@@ -1,12 +1,13 @@
 {
   "name": "pivot-mysql-app",
   "version": "1.0.0",
-  "description": "Pivot career dashboard with Express and MySQL (XAMPP)",
+  "description": "Pivot: CV-based job matching with an AI tutor for skill gaps (Express + MySQL)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "db:init": "node scripts/init-db.js"
+    "db:init": "node scripts/init-db.js",
+    "demo:reset": "node scripts/reset-user.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
