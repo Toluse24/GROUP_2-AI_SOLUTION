@@ -13,8 +13,25 @@
       setAll(['sideName', 'sidebarName', 'profileName'], name);
       setAll(['sideInitials', 'sidebarInitials', 'profileInitials', 'topInitials'], initialsOf(name));
       window.PIVOT.user = user;
+      await window.PIVOT.refreshShell();
       return user;
     })(),
+    // Fills the CV status pill and the role label shown under the user's name on every page.
+    async refreshShell(state) {
+      try {
+        state = state || await window.PIVOT.api('/api/resume');
+        window.PIVOT.state = state;
+        const hasCV = Boolean(state.resume);
+        document.querySelectorAll('[data-resume-status]').forEach(el => {
+          const dot = el.querySelector('i, .dot, .status-dot');
+          el.lastChild.textContent = hasCV ? 'CV active' : 'No CV yet';
+          if (dot) dot.style.background = hasCV ? '' : '#c3ccd9';
+        });
+        const role = state.profile.target_role || (hasCV ? 'Career explorer' : 'Upload your CV to begin');
+        document.querySelectorAll('[data-role-label]').forEach(el => { el.textContent = role; });
+        return state;
+      } catch (_) { return null; }
+    },
     // Small JSON helper used by page scripts.
     async api(url, options = {}) {
       const res = await fetch(url, { credentials: 'same-origin', ...options,

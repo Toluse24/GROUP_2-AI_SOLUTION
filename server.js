@@ -157,6 +157,7 @@ app.get("/api/profile", requireAuth, async (req, res) => {
     res.status(500).json({ message: "Could not load profile." });
   }
 });
+app.use("/api", require("./src/routes/resume")(requireAuth));
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");

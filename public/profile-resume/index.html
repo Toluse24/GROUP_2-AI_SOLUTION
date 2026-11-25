@@ -37,7 +37,7 @@
         <div class="avatar" id="sidebarInitials">DA</div>
         <div class="sidebar-user-copy">
           <strong id="sidebarName">PIVOT User</strong>
-          <span>Aspiring Frontend Engineer</span>
+          <span data-role-label>Upload your CV to begin</span>
         </div>
       </div>
     </aside>
@@ -49,7 +49,7 @@
           <p>Your career, powered by clarity.</p>
         </div>
         <div class="top-actions">
-          <span class="resume-status"><span class="status-dot"></span>Resume active</span>
+          <span class="resume-status" data-resume-status><span class="status-dot"></span>No CV yet</span>
           <div class="avatar top-avatar" id="topInitials">DA</div>
         </div>
       </header>
@@ -63,50 +63,48 @@
         <article class="card identity-card">
           <div class="large-avatar" id="profileInitials">DA</div>
           <h3 id="profileName">PIVOT User</h3>
-          <p class="role">Aspiring Frontend Engineer</p>
+          <p class="role" data-role-label>Upload your CV to begin</p>
           <div class="rule"></div>
           <p class="section-label">CAREER GOAL</p>
           <div class="goal-box">
             <span class="goal-icon">
               <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V4h6v3M4 11h16"/></svg>
             </span>
-            <span><strong>Junior Frontend Engineer</strong><small>Target role</small></span>
+            <span class="goal-copy"><strong id="targetRole">Not set yet</strong><small>Target role · <button type="button" class="link-button" id="editRole">Edit</button></small></span>
           </div>
         </article>
 
         <div class="right-column">
           <article class="card resume-card">
             <div class="card-heading">
-              <div><h3>Resume</h3><p>Upload a PDF, DOC, or DOCX file up to 5 MB</p></div>
+              <div><h3>Resume</h3><p>Upload a PDF or DOCX file up to 5 MB. We read it to find your skills.</p></div>
               <label class="replace-button" for="resumeInput">
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 15h8M8 18h5"/></svg>
-                Replace
+                <span id="uploadLabel">Upload CV</span>
               </label>
-              <input id="resumeInput" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+              <input id="resumeInput" type="file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
             </div>
             <div class="file-row" id="fileRow">
               <span class="file-icon">
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
               </span>
               <span class="file-details"><strong id="fileName">No resume uploaded</strong><small id="fileMeta">Choose a file to add your resume</small></span>
-              <span class="file-badge" id="fileBadge">Not added</span>
+              <span class="file-badge inactive" id="fileBadge">Not added</span>
             </div>
-            <p class="privacy-note" id="privacyNote">Files selected here stay in this browser session; they are not uploaded to a server.</p>
+            <div class="cv-summary hidden" id="cvSummary"><p id="summaryText"></p><span class="source-tag" id="sourceTag"></span></div>
+            <p class="privacy-note" id="privacyNote">Your CV is stored privately on the Pivot server and only used to match you with jobs.</p>
             <p class="upload-message" id="uploadMessage" role="status" aria-live="polite"></p>
           </article>
 
           <article class="card skills-card">
-            <h3>Skills &amp; credentials</h3>
-            <p class="section-label">CURRENT SKILLS</p>
-            <div class="skills">
-              <span>HTML</span><span>CSS</span><span>JavaScript</span><span>React</span><span>Figma</span>
-            </div>
-            <div class="credential">
-              <span class="credential-icon">
-                <svg viewBox="0 0 24 24"><path d="M6 3.5A1.5 1.5 0 0 1 7.5 2H19v19l-6.5-4L6 21z"/></svg>
-              </span>
-              <span><strong>Meta Front-End Developer Certificate</strong><small>Verified credential</small></span>
-            </div>
+            <h3>Skills</h3>
+            <p class="section-label">EXTRACTED FROM YOUR CV <span id="skillCount"></span></p>
+            <div class="skills" id="skillList"><p class="empty-skills">Upload your CV and your skills will appear here.</p></div>
+            <form class="add-skill" id="addSkillForm">
+              <input id="newSkill" type="text" placeholder="Add a skill the CV missed, e.g. Docker" maxlength="100" autocomplete="off">
+              <button type="submit">Add</button>
+            </form>
+            <a class="cta hidden" id="matchCta" href="/search/search.html">See jobs that match these skills →</a>
           </article>
         </div>
       </section>

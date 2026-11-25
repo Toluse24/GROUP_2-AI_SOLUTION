@@ -57,3 +57,24 @@ a{color:inherit;text-decoration:none}
 @media(max-width:800px){.profile-grid{grid-template-columns:1fr}.identity-card{min-height:0}.right-column{gap:16px}}
 @media(max-width:650px){.sidebar{position:static;width:100%;height:auto}.workspace-label{display:none}.navigation{display:flex;overflow-x:auto;padding:8px 10px}.nav-link{height:42px;white-space:nowrap;font-size:13px;gap:8px;padding:0 10px}.nav-link svg{width:19px;height:19px}.sidebar-user{display:none}.main{margin:0;padding:23px 15px 38px}.topbar{margin-bottom:26px}.intro h2{font-size:24px}.profile-grid{gap:15px}.identity-card,.resume-card,.skills-card{padding:19px}}
 @media(max-width:390px){.resume-status{font-size:10px;padding:6px 8px}.card-heading{gap:8px}.card-heading p{max-width:210px;line-height:1.5}.replace-button{padding:7px 9px}}
+/* --- Demo build: live CV data --- */
+.hidden{display:none!important}
+.link-button{background:none;border:0;padding:0;color:var(--blue);font:inherit;cursor:pointer}
+.link-button:hover{text-decoration:underline}
+.cv-summary{margin-top:14px;padding:12px 14px;border-radius:10px;background:#f7f9fc;border:1px solid #edf1f7}
+.cv-summary p{margin:0 0 8px;font-size:12px;line-height:1.55;color:#31415e}
+.source-tag{display:inline-block;font-size:10px;font-weight:600;border-radius:12px;padding:3px 9px;background:#e4efff;color:#2864e8}
+.source-tag.offline{background:#fff4e5;color:#b25e09}
+.upload-message.ok{color:#087b43}
+.file-row.busy{opacity:.7}
+.file-row.busy .file-badge{color:#2864e8;background:#e4efff}
+.skills span{display:inline-flex;align-items:center;gap:6px}
+.skills span button{border:0;background:none;color:#5b8a6f;cursor:pointer;font-size:13px;line-height:1;padding:0}
+.skills span button:hover{color:#b42318}
+.empty-skills{font-size:12px;color:var(--muted);margin:0}
+#skillCount{color:var(--muted);font-weight:500;letter-spacing:0}
+.add-skill{display:flex;gap:8px;margin-bottom:16px}
+.add-skill input{flex:1;min-width:0;border:1px solid #dce5f1;border-radius:8px;padding:8px 10px;font:inherit;font-size:12px}
+.add-skill button{border:1px solid #dce5f1;background:#fff;border-radius:8px;padding:0 14px;font:inherit;font-size:12px;cursor:pointer}
+.cta{display:inline-block;background:var(--blue);color:#fff;border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600}
+.cta:hover{filter:brightness(1.07)}
