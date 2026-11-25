@@ -1,19 +1,3 @@
-async function loadProfile() {
-  try {
-    const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
-    if (!response.ok) return;
-    const data = await response.json();
-    const user = data.user || {};
-    const name = (user.name || user.email || 'PIVOT User').trim();
-    const initials = name.split(/\\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase() || 'P';
-    document.getElementById('sideName').textContent = name;
-    document.getElementById('sideInitials').textContent = initials;
-    document.getElementById('topInitials').textContent = initials;
-  } catch (error) {
-    console.warn('Could not load the signed-in profile:', error);
-  }
-}
-loadProfile();
 
 const moduleMessages = [
   'You are currently working on TypeScript Foundations.',

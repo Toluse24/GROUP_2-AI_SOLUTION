@@ -12,6 +12,17 @@ const app = express(),
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "20kb" }));
 app.use(cookieParser());
+// Signed-in-only pages: send visitors back to the login screen.
+const PROTECTED_PAGES = /^\/(ai-career-coach\.html|learning-path\.html|search\/search\.html|profile-resume\/?(index\.html)?)$/i;
+app.use((req, res, next) => {
+  if (!PROTECTED_PAGES.test(req.path)) return next();
+  try {
+    jwt.verify(req.cookies[COOKIE_NAME] || "", process.env.JWT_SECRET);
+    return next();
+  } catch (_) {
+    return res.redirect("/");
+  }
+});
 app.use(express.static(path.join(__dirname, "public")));
 function tokenFor(user) {
   return jwt.sign(
@@ -154,6 +165,9 @@ app.get("/api/health", async (req, res) => {
     res.status(503).json({ status: "error", database: "not connected" });
   }
 });
+app.use("/api", (req, res) =>
+  res.status(404).json({ message: "Not found." }),
+);
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "index.html")),
 );

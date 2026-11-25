@@ -1,24 +1,3 @@
-// Load the currently signed-in user's name from the existing PIVOT session endpoint.
-async function loadProfile() {
-  try {
-    const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
-    if (!response.ok) return;
-
-    const data = await response.json();
-    const user = data.user || {};
-    const name = (user.name || user.fullName || user.email || 'PIVOT User').trim();
-    const initials = name.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase() || 'P';
-
-    document.getElementById('sidebarName').textContent = name;
-    document.getElementById('sidebarInitials').textContent = initials;
-    document.getElementById('topInitials').textContent = initials;
-    document.getElementById('profileName').textContent = name;
-    document.getElementById('profileInitials').textContent = initials;
-  } catch (error) {
-    console.warn('Could not load the PIVOT profile:', error);
-  }
-}
-loadProfile();
 
 // Frontend-only file selection. This does not upload the resume to the server.
 const resumeInput = document.getElementById('resumeInput');

@@ -41,3 +41,59 @@ CREATE TABLE IF NOT EXISTS learning_progress (
  CONSTRAINT fk_learning_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 INSERT IGNORE INTO skills(skill_name) VALUES('HTML'),('CSS'),('JavaScript'),('React'),('Figma'),('TypeScript'),('REST APIs'),('Jest Testing');
+
+-- ===== Demo build additions =====
+ALTER TABLE skills ADD COLUMN IF NOT EXISTS category VARCHAR(60) NULL;
+
+CREATE TABLE IF NOT EXISTS resumes (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, user_id BIGINT UNSIGNED NOT NULL,
+ original_name VARCHAR(255) NOT NULL, stored_name VARCHAR(255) NOT NULL,
+ mime_type VARCHAR(120) NULL, size_bytes INT UNSIGNED NOT NULL DEFAULT 0,
+ extracted_text MEDIUMTEXT NULL, summary VARCHAR(500) NULL,
+ detected_role VARCHAR(120) NULL, experience_level VARCHAR(40) NULL,
+ extraction_source ENUM('ai','keyword') NOT NULL DEFAULT 'keyword',
+ is_active BOOLEAN NOT NULL DEFAULT TRUE,
+ uploaded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(id), KEY idx_resumes_user(user_id),
+ CONSTRAINT fk_resumes_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS jobs (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+ external_id VARCHAR(190) NULL, source VARCHAR(40) NOT NULL DEFAULT 'seed',
+ title VARCHAR(190) NOT NULL, company VARCHAR(190) NOT NULL,
+ location VARCHAR(190) NULL, job_type VARCHAR(60) NULL, salary VARCHAR(120) NULL,
+ category VARCHAR(80) NULL, description TEXT NULL, url VARCHAR(500) NULL,
+ fetched_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(id), UNIQUE KEY uq_jobs_source_ext(source, external_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS job_skills (
+ job_id BIGINT UNSIGNED NOT NULL, skill_id BIGINT UNSIGNED NOT NULL,
+ is_required BOOLEAN NOT NULL DEFAULT TRUE,
+ PRIMARY KEY(job_id, skill_id),
+ CONSTRAINT fk_js_job FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+ CONSTRAINT fk_js_skill FOREIGN KEY(skill_id) REFERENCES skills(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- One row per (user, job) per match run; history is kept by run_id/created_at.
+CREATE TABLE IF NOT EXISTS job_matches (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, user_id BIGINT UNSIGNED NOT NULL,
+ job_id BIGINT UNSIGNED NOT NULL, resume_id BIGINT UNSIGNED NULL,
+ match_percent TINYINT UNSIGNED NOT NULL, matched_skills JSON NULL, missing_skills JSON NULL,
+ explanation VARCHAR(600) NULL, is_saved BOOLEAN NOT NULL DEFAULT FALSE,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(id), KEY idx_matches_user(user_id, created_at),
+ CONSTRAINT fk_jm_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+ CONSTRAINT fk_jm_job FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+ CONSTRAINT fk_jm_resume FOREIGN KEY(resume_id) REFERENCES resumes(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS tutor_messages (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, user_id BIGINT UNSIGNED NOT NULL,
+ skill_name VARCHAR(100) NULL, job_id BIGINT UNSIGNED NULL,
+ role ENUM('user','assistant') NOT NULL, content TEXT NOT NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(id), KEY idx_tutor_user(user_id, created_at),
+ CONSTRAINT fk_tutor_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
