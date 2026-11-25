@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile &amp; Resume | PIVOT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="/"><span class="brand-mark"></span><strong>PIVOT</strong></a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="navigation">
+        <a href="/" class="nav-link">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="7" height="8" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          Dashboard
+        </a>
+        <a href="/search/search.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="7.5"/><path d="m16.5 16.5 5 5"/></svg>
+          Search
+        </a>
+        <a href="/learning-path.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+          Learning Path
+        </a>
+        <a href="/ai-career-coach.html" class="nav-link">
+          <svg viewBox="0 0 24 24"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"/></svg>
+          AI Career Coach
+        </a>
+        <a href="/profile-resume/" class="nav-link active" aria-current="page">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21c.5-4.2 3.5-6.5 8-6.5s7.5 2.3 8 6.5"/></svg>
+          Profile &amp; Resume
+        </a>
+      </nav>
+      <div class="sidebar-user">
+        <div class="avatar" id="sidebarInitials">DA</div>
+        <div class="sidebar-user-copy">
+          <strong id="sidebarName">PIVOT User</strong>
+          <span>Aspiring Frontend Engineer</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Profile &amp; Resume</h1>
+          <p>Your career, powered by clarity.</p>
+        </div>
+        <div class="top-actions">
+          <span class="resume-status"><span class="status-dot"></span>Resume active</span>
+          <div class="avatar top-avatar" id="topInitials">DA</div>
+        </div>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">Your career identity</p>
+        <h2>Profile &amp; Resume</h2>
+      </section>
+
+      <section class="profile-grid">
+        <article class="card identity-card">
+          <div class="large-avatar" id="profileInitials">DA</div>
+          <h3 id="profileName">PIVOT User</h3>
+          <p class="role">Aspiring Frontend Engineer</p>
+          <div class="rule"></div>
+          <p class="section-label">CAREER GOAL</p>
+          <div class="goal-box">
+            <span class="goal-icon">
+              <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V4h6v3M4 11h16"/></svg>
+            </span>
+            <span><strong>Junior Frontend Engineer</strong><small>Target role</small></span>
+          </div>
+        </article>
+
+        <div class="right-column">
+          <article class="card resume-card">
+            <div class="card-heading">
+              <div><h3>Resume</h3><p>Upload a PDF, DOC, or DOCX file up to 5 MB</p></div>
+              <label class="replace-button" for="resumeInput">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 15h8M8 18h5"/></svg>
+                Replace
+              </label>
+              <input id="resumeInput" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+            </div>
+            <div class="file-row" id="fileRow">
+              <span class="file-icon">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
+              </span>
+              <span class="file-details"><strong id="fileName">No resume uploaded</strong><small id="fileMeta">Choose a file to add your resume</small></span>
+              <span class="file-badge" id="fileBadge">Not added</span>
+            </div>
+            <p class="privacy-note" id="privacyNote">Files selected here stay in this browser session; they are not uploaded to a server.</p>
+            <p class="upload-message" id="uploadMessage" role="status" aria-live="polite"></p>
+          </article>
+
+          <article class="card skills-card">
+            <h3>Skills &amp; credentials</h3>
+            <p class="section-label">CURRENT SKILLS</p>
+            <div class="skills">
+              <span>HTML</span><span>CSS</span><span>JavaScript</span><span>React</span><span>Figma</span>
+            </div>
+            <div class="credential">
+              <span class="credential-icon">
+                <svg viewBox="0 0 24 24"><path d="M6 3.5A1.5 1.5 0 0 1 7.5 2H19v19l-6.5-4L6 21z"/></svg>
+              </span>
+              <span><strong>Meta Front-End Developer Certificate</strong><small>Verified credential</small></span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

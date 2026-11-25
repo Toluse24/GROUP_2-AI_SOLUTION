@@ -1,0 +1,30 @@
+/* AI CAREER COACH SCREEN */
+.coach-screen{margin-left:242px;min-height:100vh;padding:32px 34px 50px;color:#17243b}
+.coach-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:42px}
+.coach-topbar h1{font-size:14px;margin:0 0 3px}.coach-topbar p{color:#71809a;font-size:12px;margin:0}
+.coach-header-actions{display:flex;align-items:center;gap:13px}
+.coach-heading{margin-bottom:28px}.coach-eyebrow{color:#2864e8;font-size:12px;font-weight:700;margin:0 0 10px}
+.coach-heading h2{font-size:24px;letter-spacing:-.6px;margin:0 0 8px}
+.coach-heading>p:last-child{color:#687d9d;font-size:12px;margin:0}
+.coach-layout{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(270px,.95fr);gap:24px;max-width:1075px;align-items:start}
+.chat-panel,.coach-side-card{background:#fff;border:1px solid #e1e8f1;border-radius:13px;box-shadow:0 1px 2px #1c2c4410}
+.chat-panel{min-height:581px;display:flex;flex-direction:column;overflow:hidden}
+.chat-title{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid #edf1f6}
+.coach-spark{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:#2452e8;color:white;font-size:20px}
+.chat-title strong{display:block;font-size:12px;margin-bottom:3px}.chat-title span{display:block;color:#687d9d;font-size:10px}
+.chat-messages{flex:1;min-height:390px;padding:20px;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.message{max-width:min(470px,90%);border-radius:16px;padding:16px;font-size:12px;line-height:1.65;color:#34445f;overflow-wrap:anywhere}
+.coach-message{background:#f7f9fc;border:1px solid #edf1f6}.user-message{align-self:flex-end;background:#eaf1ff;border:1px solid #d9e6ff}
+.chat-composer{display:flex;align-items:center;gap:8px;padding:14px 16px 16px;border-top:1px solid #edf1f6}
+.chat-composer input{flex:1;min-width:0;height:42px;border:1px solid #dfe6f0;border-radius:12px;padding:0 16px;outline:none;font-size:12px}
+.chat-composer input:focus{border-color:#315faf;box-shadow:0 0 0 3px #315faf18}.chat-composer input::placeholder{color:#91a5c5}
+.chat-composer button{width:34px;height:34px;border:0;border-radius:8px;background:#2864b8;color:#fff;font-size:21px;line-height:1}
+.coach-aside{display:grid;gap:20px}.coach-side-card{padding:17px}.coach-side-card h3{font-size:12px;margin:0 0 13px}
+.suggestion-list{display:grid;gap:8px}
+.suggestion{width:100%;text-align:left;border:1px solid #edf1f6;background:#f8fafc;color:#34445f;border-radius:9px;padding:11px 14px;font-size:11px;cursor:pointer}
+.suggestion:hover{border-color:#cbd9ee;background:#f1f6ff}.coach-actions{display:grid;gap:8px}.coach-actions h3{margin-bottom:4px}
+.coach-action{width:100%;min-height:36px;border-radius:8px;font-size:11px;cursor:pointer}
+.primary-action{border:1px solid #2864b8;background:#2864b8;color:white}.secondary-action{border:1px solid #dfe6f0;background:white;color:#34445f}
+.coach-disclaimer{color:#7185a4;font-size:10px;line-height:1.7;margin:0 4px}
+@media(max-width:1100px){.coach-screen{padding:28px 25px 40px}.coach-layout{grid-template-columns:minmax(0,1.5fr) minmax(245px,.9fr);gap:16px}}
+@media(max-width:760px){.coach-screen{margin-left:0;padding:25px 16px 40px}.coach-topbar{margin-bottom:30px}.coach-layout{grid-template-columns:1fr}.chat-panel{min-height:520px}.chat-messages{min-height:300px}}

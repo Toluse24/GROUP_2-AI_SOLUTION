@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learning Paths | PIVOT</title><link rel="stylesheet" href="learning-path.css">
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <a class="sidebrand" href="/"><span class="brand-square"></span><strong>PIVOT</strong></a>
+  <p class="side-label">WORKSPACE</p>
+  <nav class="nav" aria-label="Main navigation">
+    <a href="/" data-page="Dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="7" height="8" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Dashboard</a>
+    <a href="/search/search.html" data-page="Search"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="7.5"/><path d="m16.5 16.5 5 5"/></svg>Search</a>
+    <a href="learning-path.html" class="active" aria-current="page" data-page="Learning Path"><svg viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>Learning Path</a>
+    <a href="/ai-career-coach.html" data-page="AI Career Coach"><svg viewBox="0 0 24 24"><path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"/></svg>AI Career Coach</a>
+    <a href="/profile-resume/" data-page="Profile & Resume"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21c.5-4.2 3.5-6.5 8-6.5s7.5 2.3 8 6.5"/></svg>Profile &amp; Resume</a>
+  </nav>
+  <div class="mini-profile"><div class="avatar" id="sideInitials">P</div><div class="profile-copy"><strong id="sideName">PIVOT User</strong><small>Aspiring Frontend Engineer</small></div></div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><h1>Learning Paths</h1><p>Your career, powered by clarity.</p></div><div class="top-actions"><span class="status"><i class="dot"></i>Resume active</span><span class="avatar small" id="topInitials">P</span></div></header>
+  <section class="page-intro"><p class="eyebrow">Personalized for your goal</p><h2>Frontend Engineer Accelerator</h2><p class="intro-copy">Close your gaps for the Junior Frontend Engineer role at NovaTech.</p></section>
+  <section class="content-grid">
+    <article class="panel curriculum">
+      <div class="curriculum-heading"><div><h3>Your curriculum</h3><p>3 modules · 9 lessons remaining</p></div><strong class="percentage">35%</strong></div>
+      <div class="progress-track"><span style="width:35%"></span></div>
+      <div class="module-list">
+        <button class="module active-module" type="button" data-module="0"><span class="module-icon play">▶</span><span class="module-copy"><strong>TypeScript Foundations</strong><small>6 lessons · 2h 10m</small></span><span class="module-state">In progress</span></button>
+        <button class="module" type="button" data-module="1"><span class="module-icon code">&lt;/&gt;</span><span class="module-copy"><strong>Working with REST APIs</strong><small>5 lessons · 1h 45m</small></span><span class="module-state">Next up</span></button>
+        <button class="module locked-module" type="button" data-module="2"><span class="module-icon phone">▯</span><span class="module-copy"><strong>Testing React with Jest</strong><small>4 lessons · 1h 20m</small></span><span class="module-state">Locked</span></button>
+      </div>
+      <p class="module-message" id="moduleMessage" aria-live="polite">You are currently working on TypeScript Foundations.</p>
+    </article>
+    <aside class="panel outcome">
+      <div class="outcome-icon">♧</div><h3>Path outcome</h3>
+      <p>Completing this path is projected to raise your NovaTech match from 82% to 96%.</p>
+      <div class="separator"></div><h4>SKILLS YOU'LL GAIN</h4>
+      <div class="skill-tags"><span>TypeScript</span><span>REST APIs</span><span>Jest Testing</span></div>
+      <div class="separator"></div><h4>RECOMMENDED RESOURCES</h4>
+      <a class="resource" href="https://www.typescriptlang.org/docs/" target="_blank" rel="noopener"><span><strong>TypeScript Handbook</strong><small>TypeScript</small></span><b>→</b></a>
+      <a class="resource" href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank" rel="noopener"><span><strong>Using the Fetch API</strong><small>MDN Web Docs</small></span><b>→</b></a>
+      <a class="resource" href="https://testing-library.com/docs/react-testing-library/intro/" target="_blank" rel="noopener"><span><strong>React Testing Tutorial</strong><small>Testing Library</small></span><b>→</b></a>
+    </aside>
+  </section>
+</main>
+</div>
+<script src="learning-path.js"></script>
+</body></html>

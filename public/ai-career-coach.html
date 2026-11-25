@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIVOT | AI Career Coach</title>
+  <link rel="stylesheet" href="ai-career-coach.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #17243b; }
+    .pivot-sidebar { position: fixed; inset: 0 auto 0 0; width: 242px; background: #fff; border-right: 1px solid #e8edf4; display: flex; flex-direction: column; z-index: 5; }
+    .pivot-brand { height: 77px; display: flex; align-items: center; gap: 13px; padding: 0 15px; border-bottom: 1px solid #edf0f4; color: #111827; font-size: 14px; font-weight: 700; }
+    .brand-mark { width: 42px; height: 44px; border-radius: 12px; background: #dedede; display: block; }
+    .nav-heading { padding: 20px 17px 12px; color: #667085; font-size: 13px; font-weight: 700; letter-spacing: 4px; }
+    .pivot-nav { padding: 0 14px; display: grid; gap: 5px; }
+    .pivot-nav a { min-height: 46px; padding: 0 13px; display: flex; align-items: center; gap: 17px; color: #41434b; text-decoration: none; border-radius: 9px; font-size: 15px; font-weight: 600; }
+    .pivot-nav a:hover { background: #f3f6fb; }
+    .pivot-nav a.active { color: #2862bd; background: #e1e9f7; }
+    .nav-icon { width: 24px; text-align: center; font-size: 21px; font-weight: 400; }
+    .sidebar-user { margin-top: auto; padding: 15px 14px 27px; display: flex; align-items: center; gap: 11px; }
+    .user-avatar { width: 41px; height: 41px; border-radius: 50%; display: grid; place-items: center; background: #3264b5; color: #fff; font-weight: 700; }
+    .user-meta { min-width: 0; }
+    .user-meta strong { display: block; font-size: 14px; }
+    .user-meta span { display: block; color: #667085; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 155px; margin-top: 3px; }
+    .coach-screen { margin-left: 242px; min-height: 100vh; padding: 32px 34px 50px; }
+    .coach-topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:42px; }
+    .coach-topbar h1 { font-size:14px; margin:0 0 3px; }
+    .coach-topbar p { color:#71809a; font-size:12px; margin:0; }
+    .coach-header-actions { display:flex; align-items:center; gap:13px; }
+    .resume-status { border:1px solid #dce8e3; border-radius:20px; padding:6px 12px; background:#fff; color:#34445f; font-size:12px; }
+    .resume-status i { display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; margin-right:6px; }
+    .header-avatar { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:#dce8fb; color:#2862bd; font-size:12px; }
+    .coach-heading { margin-bottom:28px; }
+    .coach-eyebrow { color:#2864e8; font-size:12px; font-weight:700; margin:0 0 10px; }
+    .coach-heading h2 { font-size:24px; letter-spacing:-.6px; margin:0 0 8px; }
+    .coach-heading > p:last-child { color:#687d9d; font-size:12px; margin:0; }
+    .coach-layout { display:grid; grid-template-columns:minmax(0,1.9fr) minmax(270px,.95fr); gap:24px; max-width:1075px; align-items:start; }
+    .chat-panel,.coach-side-card { background:#fff; border:1px solid #e1e8f1; border-radius:13px; box-shadow:0 1px 2px #1c2c4410; }
+    .chat-panel { min-height:581px; display:flex; flex-direction:column; overflow:hidden; }
+    .chat-title { display:flex; align-items:center; gap:12px; padding:16px; border-bottom:1px solid #edf1f6; }
+    .coach-spark { width:36px; height:36px; border-radius:9px; display:grid; place-items:center; background:#2452e8; color:white; font-size:20px; }
+    .chat-title strong { display:block; font-size:12px; margin-bottom:3px; }
+    .chat-title span { display:block; color:#687d9d; font-size:10px; }
+    .chat-messages { flex:1; min-height:390px; padding:20px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; overflow-y:auto; }
+    .message { max-width:min(470px,90%); border-radius:16px; padding:16px; font-size:12px; line-height:1.65; color:#34445f; overflow-wrap:anywhere; }
+    .coach-message { background:#f7f9fc; border:1px solid #edf1f6; }
+    .user-message { align-self:flex-end; background:#eaf1ff; border:1px solid #d9e6ff; }
+    .chat-composer { display:flex; align-items:center; gap:8px; padding:14px 16px 16px; border-top:1px solid #edf1f6; }
+    .chat-composer input { flex:1; min-width:0; height:42px; border:1px solid #dfe6f0; border-radius:12px; padding:0 16px; outline:none; font-size:12px; }
+    .chat-composer input:focus { border-color:#315faf; box-shadow:0 0 0 3px #315faf18; }
+    .chat-composer input::placeholder { color:#91a5c5; }
+    .chat-composer button { width:34px; height:34px; border:0; border-radius:8px; background:#2864b8; color:#fff; font-size:21px; cursor:pointer; }
+    .coach-aside { display:grid; gap:20px; }
+    .coach-side-card { padding:17px; }
+    .coach-side-card h3 { font-size:12px; margin:0 0 13px; }
+    .suggestion-list { display:grid; gap:8px; }
+    .suggestion { width:100%; text-align:left; border:1px solid #edf1f6; background:#f8fafc; color:#34445f; border-radius:9px; padding:11px 14px; font-size:11px; cursor:pointer; }
+    .suggestion:hover { border-color:#cbd9ee; background:#f1f6ff; }
+    .coach-actions { display:grid; gap:8px; }
+    .coach-actions h3 { margin-bottom:4px; }
+    .coach-action { width:100%; min-height:36px; border-radius:8px; font-size:11px; cursor:pointer; }
+    .primary-action { border:1px solid #2864b8; background:#2864b8; color:white; }
+    .secondary-action { border:1px solid #dfe6f0; background:white; color:#34445f; }
+    .coach-disclaimer { color:#7185a4; font-size:10px; line-height:1.7; margin:0 4px; }
+    @media(max-width:1100px) { .coach-screen { padding:28px 25px 40px; } .coach-layout { grid-template-columns:minmax(0,1.5fr) minmax(245px,.9fr); gap:16px; } }
+    @media(max-width:760px) { .pivot-sidebar { position:static; width:100%; height:auto; } .pivot-nav { grid-template-columns:repeat(2,minmax(0,1fr)); padding-bottom:12px; } .nav-heading { padding-top:12px; } .sidebar-user { display:none; } .coach-screen { margin-left:0; padding:25px 16px 40px; } .coach-topbar { margin-bottom:30px; } .coach-layout { grid-template-columns:1fr; } .chat-panel { min-height:520px; } .chat-messages { min-height:300px; } }
+  </style>
+</head>
+<body>
+  <aside class="pivot-sidebar">
+    <div class="pivot-brand"><span class="brand-mark"></span><span>PIVOT</span></div>
+    <div class="nav-heading">WORKSPACE</div>
+    <nav class="pivot-nav">
+      <a href="/"><span class="nav-icon">▦</span>Dashboard</a>
+      <a href="/search/search.html"><span class="nav-icon">⌕</span>Search</a>
+      <a href="/learning-path.html"><span class="nav-icon">▤</span>Learning Path</a>
+      <a href="ai-career-coach.html" class="active"><span class="nav-icon">✧</span>AI Career Coach</a>
+      <a href="/profile-resume/"><span class="nav-icon">♙</span>Profile &amp; Resume</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebarInitials">JC</div>
+      <div class="user-meta"><strong id="sidebarName">Jordan Cole</strong><span>Aspiring Frontend Engineer</span></div>
+    </div>
+  </aside>
+
+  <main class="coach-screen">
+    <header class="coach-topbar">
+      <div><h1>AI Career Coach</h1><p>Your career, powered by clarity.</p></div>
+      <div class="coach-header-actions"><span class="resume-status"><i></i>Resume active</span><span class="header-avatar">JC</span></div>
+    </header>
+
+    <div class="coach-heading">
+      <p class="coach-eyebrow">✧ &nbsp;Local AI preview</p>
+      <h2>AI Career Coach</h2>
+      <p>Ask for tailored career advice or let the coach turn your skill gaps into an action plan.</p>
+    </div>
+
+    <div class="coach-layout">
+      <section class="chat-panel">
+        <div class="chat-title"><div class="coach-spark">✧</div><div><strong>Pivot Coach</strong><span>Uses your current profile and job matches</span></div></div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite">
+          <div class="message coach-message">Hi Jordan. I've reviewed your current Pivot profile. Your strongest match is Junior Frontend Engineer at NovaTech, and the main gaps are TypeScript, REST APIs, and Jest. What would you like to work on?</div>
+        </div>
+        <form class="chat-composer" id="coachForm">
+          <input id="coachInput" type="text" placeholder="Ask about your skills, resume, or next step..." autocomplete="off" aria-label="Message the career coach">
+          <button type="submit" aria-label="Send message">→</button>
+        </form>
+      </section>
+
+      <aside class="coach-aside">
+        <section class="coach-side-card"><h3>Try asking</h3><div class="suggestion-list">
+          <button type="button" class="suggestion">Create my learning path</button>
+          <button type="button" class="suggestion">How can I improve my resume?</button>
+          <button type="button" class="suggestion">Compare my job matches</button>
+          <button type="button" class="suggestion">Help me prepare for an interview</button>
+        </div></section>
+        <section class="coach-side-card coach-actions"><h3>Coach actions</h3>
+          <button type="button" class="coach-action primary-action" id="buildPathBtn">▣ &nbsp; Build learning path</button>
+          <button type="button" class="coach-action secondary-action" id="openJobsBtn">⌕ &nbsp; Open job matches</button>
+        </section>
+        <p class="coach-disclaimer">This frontend prototype uses sample profile information and rule-based responses. It does not send data to an external AI service.</p>
+      </aside>
+    </div>
+  </main>
+  <script src="ai-career-coach.js"></script>
+</body>
+</html>
