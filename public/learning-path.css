@@ -42,3 +42,14 @@ a{text-decoration:none;color:inherit}
 @media(max-width:1050px){.main{padding:28px 25px}.content-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.sidebar{position:static;width:100%;height:auto}.side-label{display:none}.nav{display:flex;overflow-x:auto;padding:8px 10px}.nav a{height:42px;white-space:nowrap;font-size:13px;gap:8px;padding:0 10px}.nav svg{width:19px;height:19px}.mini-profile{display:none}.main{margin:0;padding:25px 16px 40px}.topbar{margin-bottom:28px}.page-intro h2{font-size:24px}.content-grid{gap:16px}.curriculum,.outcome{padding:19px}.module{padding:12px;gap:10px}.module-state{font-size:11px}}
 @media(max-width:420px){.status{font-size:10px;padding:6px 8px}.module-copy strong{font-size:12px}.module-copy small{font-size:10px}.module-icon{width:34px;height:34px}.module-state{font-size:10px}}
+/* ===== Demo build: live learning path ===== */
+.hidden{display:none!important}
+.path-picker{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--muted)}
+.path-picker select{border:1px solid #DCE5F1;border-radius:8px;padding:7px 10px;font:inherit;font-size:12px;color:var(--ink);background:#fff}
+.module{text-decoration:none;color:inherit}
+.module .module-state.completed{color:#087b43;background:#e7f5ec}
+.module .module-state.in_progress{color:#2864E8;background:#EFF5FF}
+.module .module-state.next{color:#b25e09;background:#fff1e3}
+.module-icon.done{background:#e7f5ec;color:#087b43}
+.path-empty{padding:28px;font-size:13px;color:#52627F;line-height:1.6}
+.path-empty a{color:#2864E8;font-weight:600}

@@ -107,3 +107,4 @@ CREATE TABLE IF NOT EXISTS api_cache (
 ) ENGINE=InnoDB;
 ALTER TABLE tutor_messages ADD COLUMN IF NOT EXISTS source VARCHAR(20) NULL AFTER content;
 ALTER TABLE tutor_messages ADD INDEX IF NOT EXISTS idx_tutor_skill(user_id, skill_name);
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS path_job_id BIGINT UNSIGNED NULL;
