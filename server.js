@@ -159,6 +159,7 @@ app.get("/api/profile", requireAuth, async (req, res) => {
 });
 app.use("/api", require("./src/routes/resume")(requireAuth));
 app.use("/api", require("./src/routes/matches")(requireAuth));
+app.use("/api", require("./src/routes/tutor")(requireAuth));
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");

@@ -41,7 +41,7 @@
     .coach-spark { width:36px; height:36px; border-radius:9px; display:grid; place-items:center; background:#2452e8; color:white; font-size:20px; }
     .chat-title strong { display:block; font-size:12px; margin-bottom:3px; }
     .chat-title span { display:block; color:#687d9d; font-size:10px; }
-    .chat-messages { flex:1; min-height:390px; padding:20px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; overflow-y:auto; }
+    .chat-messages { flex:1; min-height:390px; max-height:calc(100vh - 330px); padding:20px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; overflow-y:auto; }
     .message { max-width:min(470px,90%); border-radius:16px; padding:16px; font-size:12px; line-height:1.65; color:#34445f; overflow-wrap:anywhere; }
     .coach-message { background:#f7f9fc; border:1px solid #edf1f6; }
     .user-message { align-self:flex-end; background:#eaf1ff; border:1px solid #d9e6ff; }
@@ -64,6 +64,44 @@
     .coach-disclaimer { color:#7185a4; font-size:10px; line-height:1.7; margin:0 4px; }
     @media(max-width:1100px) { .coach-screen { padding:28px 25px 40px; } .coach-layout { grid-template-columns:minmax(0,1.5fr) minmax(245px,.9fr); gap:16px; } }
     @media(max-width:760px) { .pivot-sidebar { position:static; width:100%; height:auto; } .pivot-nav { grid-template-columns:repeat(2,minmax(0,1fr)); padding-bottom:12px; } .nav-heading { padding-top:12px; } .sidebar-user { display:none; } .coach-screen { margin-left:0; padding:25px 16px 40px; } .coach-topbar { margin-bottom:30px; } .coach-layout { grid-template-columns:1fr; } .chat-panel { min-height:520px; } .chat-messages { min-height:300px; } }
+    .hidden { display:none !important; }
+    .muted { color:#7185a4; font-size:11px; margin:0; }
+    .message p { margin:0 0 8px; } .message p:last-child { margin-bottom:0; }
+    .message ul, .message ol { margin:4px 0 8px; padding-left:18px; } .message li { margin:2px 0; }
+    .message code { background:#eef2f8; border-radius:4px; padding:1px 5px; font-family:Consolas,monospace; font-size:11px; }
+    .message pre { background:#0f1a2c; color:#e6edf7; border-radius:9px; padding:12px; overflow-x:auto; margin:6px 0 10px; }
+    .message pre code { background:none; padding:0; color:inherit; }
+    .message a { color:#2452e8; font-weight:600; }
+    .message.coach-message { max-width:min(560px,94%); }
+    .message .src-tag { display:block; margin-top:8px; font-size:9px; color:#8a9ab3; text-transform:uppercase; letter-spacing:.6px; }
+    .typing { color:#7185a4; font-style:italic; }
+    .quick-row { display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px 0; border-top:1px solid #edf1f6; }
+    .quick { border:1px solid #dfe6f0; background:#f8fafc; border-radius:14px; padding:6px 11px; font-size:11px; color:#34445f; cursor:pointer; }
+    .quick:hover { border-color:#bcd0ee; background:#f1f6ff; }
+    .chat-composer { border-top:0; }
+    .chat-composer input:disabled, .chat-composer button:disabled { opacity:.55; }
+    .job-mini { display:flex; gap:12px; align-items:center; }
+    .job-mini strong { display:block; font-size:12px; } .job-mini small { display:block; color:#687d9d; font-size:11px; margin-top:3px; }
+    .mini-ring { width:46px; height:46px; border-radius:50%; flex:none; display:grid; place-items:center; background:conic-gradient(var(--ring,#2864b8) var(--fit,0%), #e5eaf2 0); transition:background .6s; }
+    .mini-ring span { width:38px; height:38px; border-radius:50%; background:#fff; display:grid; place-items:center; font-size:11px; font-weight:700; }
+    .fit-note { font-size:11px; color:#4a5a75; line-height:1.55; margin:12px 0 0; }
+    .progress-track { height:6px; border-radius:3px; background:#e8edf5; margin:0 0 12px; overflow:hidden; }
+    .progress-track i { display:block; height:100%; width:0; background:#10b981; transition:width .3s; }
+    .step { display:flex; gap:8px; align-items:center; font-size:11px; color:#34445f; margin:0 0 9px; cursor:pointer; }
+    #learnedBtn { margin-top:6px; } #learnedBtn:disabled { opacity:.6; cursor:default; }
+    .learned-note { font-size:11px; color:#087b43; background:#e7f5ec; border-radius:8px; padding:9px 10px; margin:10px 0 0; line-height:1.5; }
+    .resources { list-style:none; margin:0; padding:0; display:grid; gap:8px; }
+    .resources a { display:block; padding:9px 11px; border:1px solid #edf1f6; border-radius:9px; text-decoration:none; color:#17243b; background:#f8fafc; }
+    .resources a:hover { border-color:#cbd9ee; background:#f1f6ff; }
+    .resources strong { display:block; font-size:11px; } .resources small { color:#7185a4; font-size:10px; }
+    .gap-list { display:grid; gap:6px; max-height:300px; overflow-y:auto; }
+    .gap-btn { display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; text-align:left; border:1px solid #edf1f6; background:#fff; border-radius:9px; padding:9px 11px; cursor:pointer; font:inherit; }
+    .gap-btn:hover { border-color:#cbd9ee; }
+    .gap-btn.active { border-color:#2864b8; background:#f1f6ff; }
+    .gap-btn strong { display:block; font-size:11px; color:#17243b; } .gap-btn small { font-size:10px; color:#7185a4; }
+    .gap-badge { font-size:9px; font-weight:700; border-radius:10px; padding:3px 7px; background:#fff1e3; color:#b25e09; white-space:nowrap; }
+    .gap-badge.done { background:#e7f5ec; color:#087b43; } .gap-badge.doing { background:#e4efff; color:#2864e8; }
+    .empty-coach { text-align:center; margin:auto; color:#4a5a75; font-size:12px; } .empty-coach a { color:#2452e8; font-weight:700; }
   </style>
 </head>
 <body>
@@ -74,51 +112,73 @@
       <a href="/"><span class="nav-icon">▦</span>Dashboard</a>
       <a href="/search/search.html"><span class="nav-icon">⌕</span>Search</a>
       <a href="/learning-path.html"><span class="nav-icon">▤</span>Learning Path</a>
-      <a href="ai-career-coach.html" class="active"><span class="nav-icon">✧</span>AI Career Coach</a>
+      <a href="/ai-career-coach.html" class="active"><span class="nav-icon">✧</span>AI Career Coach</a>
       <a href="/profile-resume/"><span class="nav-icon">♙</span>Profile &amp; Resume</a>
     </nav>
     <div class="sidebar-user">
-      <div class="user-avatar" id="sidebarInitials">JC</div>
-      <div class="user-meta"><strong id="sidebarName">Jordan Cole</strong><span>Aspiring Frontend Engineer</span></div>
+      <div class="user-avatar" id="sidebarInitials">P</div>
+      <div class="user-meta"><strong id="sidebarName">PIVOT User</strong><span data-role-label>Upload your CV to begin</span></div>
     </div>
   </aside>
 
   <main class="coach-screen">
     <header class="coach-topbar">
       <div><h1>AI Career Coach</h1><p>Your career, powered by clarity.</p></div>
-      <div class="coach-header-actions"><span class="resume-status"><i></i>Resume active</span><span class="header-avatar">JC</span></div>
+      <div class="coach-header-actions"><span class="resume-status" data-resume-status><i></i>No CV yet</span><span class="header-avatar" id="topInitials">P</span></div>
     </header>
 
     <div class="coach-heading">
-      <p class="coach-eyebrow">✧ &nbsp;Local AI preview</p>
-      <h2>AI Career Coach</h2>
-      <p>Ask for tailored career advice or let the coach turn your skill gaps into an action plan.</p>
+      <p class="coach-eyebrow" id="modeLabel">✧ &nbsp;AI tutor</p>
+      <h2 id="lessonTitle">Close your skill gaps</h2>
+      <p id="lessonSub">Pick a skill gap and your tutor will teach it step by step, with free resources, using what is already on your CV.</p>
     </div>
 
     <div class="coach-layout">
       <section class="chat-panel">
-        <div class="chat-title"><div class="coach-spark">✧</div><div><strong>Pivot Coach</strong><span>Uses your current profile and job matches</span></div></div>
-        <div class="chat-messages" id="chatMessages" aria-live="polite">
-          <div class="message coach-message">Hi Jordan. I've reviewed your current Pivot profile. Your strongest match is Junior Frontend Engineer at NovaTech, and the main gaps are TypeScript, REST APIs, and Jest. What would you like to work on?</div>
+        <div class="chat-title"><div class="coach-spark">✧</div><div><strong id="chatTitle">Pivot Tutor</strong><span id="chatSub">Knows your CV, your job matches and your gaps</span></div></div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+        <div class="quick-row" id="quickRow">
+          <button type="button" class="quick" data-ask="Explain the key concepts">Explain</button>
+          <button type="button" class="quick" data-ask="Show me an example">Example</button>
+          <button type="button" class="quick" data-ask="Give me a mini project">Project</button>
+          <button type="button" class="quick" data-ask="Make me a 2-week plan">2-week plan</button>
+          <button type="button" class="quick" data-ask="Quiz me">Quiz me</button>
+          <button type="button" class="quick" data-ask="Interview questions">Interview prep</button>
         </div>
         <form class="chat-composer" id="coachForm">
-          <input id="coachInput" type="text" placeholder="Ask about your skills, resume, or next step..." autocomplete="off" aria-label="Message the career coach">
-          <button type="submit" aria-label="Send message">→</button>
+          <input id="coachInput" type="text" placeholder="Ask your tutor anything about this skill..." autocomplete="off" aria-label="Message the tutor" disabled>
+          <button type="submit" aria-label="Send message" id="sendBtn" disabled>→</button>
         </form>
       </section>
 
       <aside class="coach-aside">
-        <section class="coach-side-card"><h3>Try asking</h3><div class="suggestion-list">
-          <button type="button" class="suggestion">Create my learning path</button>
-          <button type="button" class="suggestion">How can I improve my resume?</button>
-          <button type="button" class="suggestion">Compare my job matches</button>
-          <button type="button" class="suggestion">Help me prepare for an interview</button>
-        </div></section>
-        <section class="coach-side-card coach-actions"><h3>Coach actions</h3>
-          <button type="button" class="coach-action primary-action" id="buildPathBtn">▣ &nbsp; Build learning path</button>
-          <button type="button" class="coach-action secondary-action" id="openJobsBtn">⌕ &nbsp; Open job matches</button>
+        <section class="coach-side-card hidden" id="jobCard">
+          <h3>Learning for</h3>
+          <div class="job-mini"><div class="mini-ring" id="jobRing"><span id="jobFit">–</span></div><div><strong id="jobTitle"></strong><small id="jobMeta"></small></div></div>
+          <p class="fit-note" id="fitNote"></p>
         </section>
-        <p class="coach-disclaimer">This frontend prototype uses sample profile information and rule-based responses. It does not send data to an external AI service.</p>
+
+        <section class="coach-side-card hidden" id="progressCard">
+          <h3>Your progress · <span id="progressLabel">0 of 4</span></h3>
+          <div class="progress-track"><i id="progressBar"></i></div>
+          <label class="step"><input type="checkbox" data-step="1"> Understand the core concepts</label>
+          <label class="step"><input type="checkbox" data-step="2"> Practise with an exercise</label>
+          <label class="step"><input type="checkbox" data-step="3"> Build a mini project</label>
+          <label class="step"><input type="checkbox" data-step="4"> Pass the quiz</label>
+          <button type="button" class="coach-action primary-action" id="learnedBtn">✓ &nbsp;Mark skill as learned</button>
+          <p class="learned-note hidden" id="learnedNote"></p>
+        </section>
+
+        <section class="coach-side-card hidden" id="resourcesCard">
+          <h3>Free learning links</h3>
+          <ul class="resources" id="resourceList"></ul>
+        </section>
+
+        <section class="coach-side-card">
+          <h3>Your skill gaps</h3>
+          <div class="gap-list" id="gapList"><p class="muted">Loading…</p></div>
+        </section>
+        <p class="coach-disclaimer" id="disclaimer"></p>
       </aside>
     </div>
   </main>

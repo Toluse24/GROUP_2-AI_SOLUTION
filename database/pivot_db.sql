@@ -105,3 +105,5 @@ CREATE TABLE IF NOT EXISTS api_cache (
  cache_key VARCHAR(255) NOT NULL, fetched_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
  PRIMARY KEY(cache_key)
 ) ENGINE=InnoDB;
+ALTER TABLE tutor_messages ADD COLUMN IF NOT EXISTS source VARCHAR(20) NULL AFTER content;
+ALTER TABLE tutor_messages ADD INDEX IF NOT EXISTS idx_tutor_skill(user_id, skill_name);
