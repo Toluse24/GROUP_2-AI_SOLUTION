@@ -70,7 +70,7 @@ module.exports = function dashboardRoutes(requireAuth) {
     try {
       const uid = req.user.id;
       const [[profile]] = await pool.execute(
-        `SELECT p.target_role, p.path_job_id, r.id AS resume_id, r.original_name FROM user_profiles p
+        `SELECT p.target_role, r.path, r.job_id, r.id AS resume_id, r.original_name FROM user_profiles p
            LEFT JOIN resumes r ON r.user_id=p.user_id AND r.is_active=1 WHERE p.user_id=? ORDER BY r.id DESC LIMIT 1`, [uid]);
       const [[{ n: skillCount }]] = await pool.execute('SELECT COUNT(*) AS n FROM user_skills WHERE user_id=?', [uid]);
       const run = await latestRun(uid);

@@ -82,7 +82,7 @@
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 15h8M8 18h5"/></svg>
                 <span id="uploadLabel">Upload CV</span>
               </label>
-              <input id="resumeInput" type="file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+              <input id="resumeInput" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
             </div>
             <div class="file-row" id="fileRow">
               <span class="file-icon">
@@ -104,7 +104,7 @@
               <input id="newSkill" type="text" placeholder="Add a skill the CV missed, e.g. Docker" maxlength="100" autocomplete="off">
               <button type="submit">Add</button>
             </form>
-            <a class="cta hidden" id="matchCta" href="/search/search.html">See jobs that match these skills →</a>
+            <button class="cta hidden" id="matchCta" type="button">Run job matching →</button>
           </article>
         </div>
       </section>

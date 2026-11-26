@@ -12,7 +12,7 @@ const TOTAL_STEPS = 4;
 async function latestMatchFor(userId, jobId) {
   const [[m]] = await pool.execute(
     'SELECT match_percent AS fit, potential_percent AS potential, run_id FROM job_matches WHERE user_id=? AND job_id=? ORDER BY id DESC LIMIT 1', [userId, jobId]);
-  return m || null;
+  return m || null; 
 }
 
 async function buildContext(user, skill, jobId) {

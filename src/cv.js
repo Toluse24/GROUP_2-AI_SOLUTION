@@ -63,6 +63,7 @@ async function aiExtract(text) {
     .map(s => ({ name: canonical(typeof s === 'string' ? s : s.name), proficiency: Math.min(5, Math.max(1, Number(s.proficiency) || 3)) }))
     .filter(s => s.name && !seen.has(s.name.toLowerCase()) && seen.add(s.name.toLowerCase()))
     .slice(0, 25);
+  if (!skills.length) return null;
   return {
     source: 'ai',
     detected_role: String(result.detected_role || '').slice(0, 120) || null,

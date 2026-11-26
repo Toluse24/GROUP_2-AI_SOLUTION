@@ -3,6 +3,8 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.startsWith("replace_this")
   console.error("JWT_SECRET is missing. Copy .env.example to .env and set a long random JWT_SECRET (see README).");
   process.exit(1);
 }
+
+
 const express = require("express"),
   path = require("path"),
   helmet = require("helmet"),

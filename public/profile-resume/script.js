@@ -35,7 +35,7 @@ function render(state) {
 
 async function upload(file) {
   setMessage('');
-  if (!/\.(pdf|docx?)$/i.test(file.name)) return setMessage('Please choose a PDF or DOCX file.');
+  if (!/\.(pdf|docx)$/i.test(file.name)) return setMessage('Please choose a PDF or DOCX file.');
   if (file.size > 5 * 1024 * 1024) return setMessage('The selected file is larger than the 5 MB limit.');
 
   $('fileRow').classList.add('busy');
@@ -48,7 +48,7 @@ async function upload(file) {
     body.append('resume', file);
     const state = await window.PIVOT.api('/api/resume', { method: 'POST', body });
     render(state);
-    setMessage(state.message, true);
+    setMessage(state.message, !state.matchWarning);
   } catch (e) {
     setMessage(e.message);
     load();
@@ -67,14 +67,19 @@ $('resumeInput').addEventListener('change', () => { const f = $('resumeInput').f
 
 $('skillList').addEventListener('click', async e => {
   const name = e.target.dataset.remove;
-  if (name) render(await window.PIVOT.api(`/api/skills/${encodeURIComponent(name)}`, { method: 'DELETE' }));
+  if (!name) return;
+  const state = await window.PIVOT.api(`/api/skills/${encodeURIComponent(name)}`, { method: 'DELETE' });
+  render(state);
+  setMessage(state.matchWarning || (state.matchRunId ? 'Skill removed and job matches updated.' : 'Skill removed.'), !state.matchWarning);
 });
 
 $('addSkillForm').addEventListener('submit', async e => {
   e.preventDefault();
   const name = $('newSkill').value.trim();
   if (!name) return;
-  render(await window.PIVOT.api('/api/skills', { method: 'POST', body: JSON.stringify({ name }) }));
+  const state = await window.PIVOT.api('/api/skills', { method: 'POST', body: JSON.stringify({ name }) });
+  render(state);
+  setMessage(state.matchWarning || (state.matchRunId ? 'Skill added and job matches updated.' : 'Skill added.'), !state.matchWarning);
   $('newSkill').value = '';
 });
 
@@ -82,7 +87,25 @@ $('editRole').addEventListener('click', async () => {
   const current = window.PIVOT.state?.profile?.target_role || '';
   const role = window.prompt('What role are you aiming for?', current);
   if (role === null) return;
-  render(await window.PIVOT.api('/api/profile', { method: 'PUT', body: JSON.stringify({ target_role: role, location: window.PIVOT.state?.profile?.location }) }));
+  const state = await window.PIVOT.api('/api/profile', { method: 'PUT', body: JSON.stringify({ target_role: role, location: window.PIVOT.state?.profile?.location }) });
+  render(state);
+  setMessage(state.matchWarning || (state.matchRunId ? 'Target role saved and job matches updated.' : 'Target role saved.'), !state.matchWarning);
+});
+
+$('matchCta').addEventListener('click', async () => {
+  const button = $('matchCta');
+  button.disabled = true;
+  button.textContent = 'Matching jobs…';
+  try {
+    const data = await window.PIVOT.api('/api/matches/run', { method: 'POST', body: '{}' });
+    setMessage(`Updated ${data.matches.length} job matches. Opening Search…`, true);
+    window.location.href = '/search/search.html';
+  } catch (e) {
+    setMessage(e.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Run job matching →';
+  }
 });
 
 window.PIVOT.ready.then(load);

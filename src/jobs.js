@@ -2,11 +2,10 @@
 const crypto = require('crypto');
 const pool = require('./db');
 const SEED = require('./seed-jobs');
-const { findSkills, categoryOf } = require('./skills');
+const { findSkills, canonical, categoryOf } = require('./skills');
 
 const REMOTIVE = 'https://remotive.com/api/remote-jobs';
 const CACHE_HOURS = 6; // Remotive asks for at most ~4 fetches a day per query.
-const LIVE_MAX_AGE_DAYS = 7;
 
 // ---------- skills <-> DB ----------
 const skillIds = new Map(); // skill name -> id; skills are never deleted, so this cache stays valid
@@ -142,10 +141,14 @@ function roleSimilarity(targetRole, title) {
  * Fit % = 80% weighted skill coverage (must-have x2, nice-to-have x1) + 20% title similarity to the
  * user's target role, minus a seniority penalty when an entry/junior profile meets a senior/lead post.
  */
-function scoreJob(job, userSkillSet, profile) {
-  const req = job.skills.filter(s => s.required).map(s => s.name);
-  const nice = job.skills.filter(s => !s.required).map(s => s.name);
-  const has = s => userSkillSet.has(s.toLowerCase());
+function scoreJob(job, userSkillSet, profile = {}) {
+  const normalise = name => canonical(name);
+  const key = name => normalise(name)?.toLowerCase();
+  const req = [...new Map(job.skills.filter(s => s.required).map(s => normalise(s.name)).filter(Boolean).map(name => [key(name), name])).values()];
+  const requiredKeys = new Set(req.map(key));
+  const nice = [...new Map(job.skills.filter(s => !s.required).map(s => normalise(s.name)).filter(name => name && !requiredKeys.has(key(name))).map(name => [key(name), name])).values()];
+  const skills = new Set([...userSkillSet].map(key).filter(Boolean));
+  const has = s => skills.has(key(s));
   const total = req.length * 2 + nice.length;
   const got = req.filter(has).length * 2 + nice.filter(has).length;
   const skillScore = total ? got / total : 0;
@@ -154,26 +157,34 @@ function scoreJob(job, userSkillSet, profile) {
   const penalty = junior && /\b(senior|sr\.?|lead|principal|staff|head|director)\b/i.test(job.title) ? 12 : 0;
   const fit = Math.round(Math.max(3, Math.min(98, 100 * (0.8 * skillScore + 0.2 * roleScore) - penalty)));
   // What the fit would be if every missing must-have skill were learned.
-  const potential = Math.round(Math.min(98, 100 * (0.8 * (total ? (req.length * 2 + nice.filter(has).length) / total : 0) + 0.2 * roleScore) - penalty));
+  const potential = Math.round(Math.max(3, Math.min(98, 100 * (0.8 * (total ? (req.length * 2 + nice.filter(has).length) / total : 0) + 0.2 * roleScore) - penalty)));
   const matched = [...req, ...nice].filter(has);
   const missing = [...req.filter(s => !has(s)).map(name => ({ name, required: true })), ...nice.filter(s => !has(s)).map(name => ({ name, required: false }))];
-  const missingReq = missing.filter(m => m.required).map(m => m.name);
+  const requiredMatched = req.filter(has).length;
+  const optionalMatched = nice.filter(has).length;
+  const missingReq = req.filter(s => !has(s));
   const explanation = missingReq.length
-    ? `You have ${matched.length} of ${req.length + nice.length} skills this role asks for. Learning ${listText(missingReq.slice(0, 3))} would lift your fit to about ${potential}%.`
-    : `You cover every must-have skill for this role${missing.length ? `; ${listText(missing.slice(0, 2).map(m => m.name))} would make you stand out` : ''}.`;
+    ? `You match ${requiredMatched}/${req.length} must-have and ${optionalMatched}/${nice.length} optional skills. Learning ${listText(missingReq.slice(0, 3))} could lift your fit to about ${potential}%.`
+    : `You cover all ${req.length} must-have skills and match ${optionalMatched}/${nice.length} optional skills${missing.length ? `; learning ${listText(missing.map(m => m.name))} could strengthen your profile` : ''}.`;
   return { fit, potential, skillScore, roleScore, matched, missing, explanation };
 }
 const listText = a => (a.length <= 1 ? a.join('') : `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`);
 
 async function loadJobsWithSkills() {
   const [jobs] = await pool.execute(
-    `SELECT id, source, title, company, location, job_type, salary, category, url FROM jobs
-      WHERE source='seed' OR fetched_at > (NOW() - INTERVAL ${LIVE_MAX_AGE_DAYS} DAY)`);
+    `SELECT id, source, title, company, location, job_type, salary, category, url FROM jobs`);
   const [skills] = await pool.execute(
     `SELECT js.job_id, s.skill_name AS name, js.is_required FROM job_skills js JOIN skills s ON s.id=js.skill_id`);
   const byJob = new Map(jobs.map(j => [j.id, { ...j, skills: [] }]));
-  skills.forEach(s => byJob.get(s.job_id)?.skills.push({ name: s.name, required: Boolean(s.is_required) }));
-  return [...byJob.values()].filter(j => j.skills.length >= 3);
+  skills.forEach(s => {
+    const job = byJob.get(s.job_id);
+    if (!job) return;
+    const name = canonical(s.name);
+    const existing = job.skills.find(skill => skill.name.toLowerCase() === name.toLowerCase());
+    if (existing) existing.required = existing.required || Boolean(s.is_required);
+    else job.skills.push({ name, required: Boolean(s.is_required) });
+  });
+  return [...byJob.values()].filter(j => j.skills.length > 0);
 }
 
 async function userContext(userId) {
@@ -197,10 +208,15 @@ async function runMatching(userId, { live = true, limit = 15 } = {}) {
   const userSet = new Set(skills.map(s => s.name.toLowerCase()));
   const scored = (await loadJobsWithSkills())
     .map(job => ({ job, ...scoreJob(job, userSet, profile) }))
-    // Live postings are noisy: keep only those that are actually relevant to this person.
-    .filter(r => r.job.source === 'seed' || r.roleScore > 0 || r.skillScore >= 0.5)
+    // A title match alone is not enough to recommend a job.
+    .filter(r => r.matched.length > 0)
     .sort((a, b) => b.fit - a.fit || b.skillScore - a.skillScore)
     .slice(0, limit);
+  if (!scored.length) {
+    const err = new Error('No available jobs share a skill with your profile yet. Add or correct your skills, then run matching again.');
+    err.status = 404;
+    throw err;
+  }
 
   const runId = crypto.randomBytes(8).toString('hex');
   const [savedRows] = await pool.execute('SELECT DISTINCT job_id FROM job_matches WHERE user_id=? AND is_saved=1', [userId]);

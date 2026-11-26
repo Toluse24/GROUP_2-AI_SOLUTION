@@ -1,6 +1,7 @@
 // CV upload, extracted skills, and profile editing.
 const express = require('express');
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const pool = require('../db');
@@ -9,6 +10,7 @@ const { canonical, categoryOf } = require('../skills');
 const { runMatching } = require('../jobs');
 
 const UPLOAD_DIR = path.join(__dirname, '..', '..', 'uploads');
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 const upload = multer({
   storage: multer.diskStorage({
     destination: UPLOAD_DIR,
@@ -23,6 +25,21 @@ async function skillIdFor(conn, name) {
   await conn.execute('INSERT INTO skills(skill_name, category) VALUES(?, ?) ON DUPLICATE KEY UPDATE category=COALESCE(category, VALUES(category))', [name, categoryOf(name)]);
   const [[row]] = await conn.execute('SELECT id FROM skills WHERE skill_name=?', [name]);
   return row.id;
+}
+
+async function refreshMatches(userId, live = false) {
+  try {
+    const { runId } = await runMatching(userId, { live });
+    console.log(runId)
+    return { matchRunId: runId };
+  } catch (e) {
+    console.warn('Matching after profile update failed:', e.message);
+    return {
+      matchWarning: e.status
+        ? e.message
+        : 'Your profile was saved, but job matching could not finish. Please try again from Search.',
+    };
+  }
 }
 
 async function loadResumeState(userId) {
@@ -56,9 +73,9 @@ module.exports = function resumeRoutes(requireAuth) {
       await conn.beginTransaction();
       await conn.execute('UPDATE resumes SET is_active=0 WHERE user_id=?', [req.user.id]);
       await conn.execute(
-        `INSERT INTO resumes(user_id, original_name, stored_name, mime_type, size_bytes, extracted_text, summary, detected_role, experience_level, extraction_source)
-         VALUES(?,?,?,?,?,?,?,?,?,?)`,
-        [req.user.id, req.file.originalname.slice(0, 255), req.file.filename, req.file.mimetype, req.file.size,
+        `INSERT INTO resumes(user_id, path, original_name, stored_name, mime_type, size_bytes, extracted_text, summary, detected_role, experience_level, extraction_source)
+         VALUES(?,?,?,?,?,?,?,?,?,?,?)`,
+        [req.user.id, req.file.path, req.file.originalname.slice(0, 255), req.file.filename, req.file.mimetype, req.file.size,
           cv.text, cv.summary, cv.detected_role, cv.experience_level, cv.source]);
       // The new CV replaces the previous skill set.
       await conn.execute('DELETE FROM user_skills WHERE user_id=?', [req.user.id]);
@@ -75,10 +92,11 @@ module.exports = function resumeRoutes(requireAuth) {
       await conn.commit();
       conn.release();
       conn = null;
-      // Match straight away so the Search page is ready; a failure here must not lose the upload.
-      let matchRunId = null;
-      try { matchRunId = (await runMatching(req.user.id)).runId; } catch (e) { console.warn('Matching after upload failed:', e.message); }
-      res.status(201).json({ message: `CV analysed. ${cv.skills.length} skills found.`, matchRunId, ...(await loadResumeState(req.user.id)) });
+      const matching = await refreshMatches(req.user.id, true);
+      const message = matching.matchWarning
+        ? `CV analysed. ${cv.skills.length} skills found. ${matching.matchWarning}`
+        : `CV analysed. ${cv.skills.length} skills found. Your job matches are ready.`;
+      res.status(201).json({ message, ...matching, ...(await loadResumeState(req.user.id)) });
     } catch (e) {
       if (conn) await conn.rollback().catch(() => {});
       if (!e.status) console.error(e);
@@ -96,21 +114,21 @@ module.exports = function resumeRoutes(requireAuth) {
       const id = await skillIdFor(conn, name);
       await conn.execute('INSERT IGNORE INTO user_skills(user_id, skill_id, proficiency) VALUES(?,?,60)', [req.user.id, id]);
     } finally { conn.release(); }
-    res.status(201).json(await loadResumeState(req.user.id));
+    res.status(201).json({ ...(await loadResumeState(req.user.id)), ...(await refreshMatches(req.user.id)) });
   });
 
   router.delete('/skills/:name', requireAuth, async (req, res) => {
     await pool.execute(
       'DELETE us FROM user_skills us JOIN skills s ON s.id=us.skill_id WHERE us.user_id=? AND s.skill_name=?',
       [req.user.id, req.params.name]);
-    res.json(await loadResumeState(req.user.id));
+    res.json({ ...(await loadResumeState(req.user.id)), ...(await refreshMatches(req.user.id)) });
   });
 
   router.put('/profile', requireAuth, async (req, res) => {
     const clean = v => (v == null ? null : String(v).trim().slice(0, 120) || null);
     await pool.execute('UPDATE user_profiles SET target_role=?, location=? WHERE user_id=?',
       [clean(req.body.target_role), clean(req.body.location), req.user.id]);
-    res.json(await loadResumeState(req.user.id));
+    res.json({ ...(await loadResumeState(req.user.id)), ...(await refreshMatches(req.user.id)) });
   });
 
   return router;
